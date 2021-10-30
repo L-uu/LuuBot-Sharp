@@ -1,3 +1,5 @@
+.vs/
 bin/
 obj/
+Lavalink/logs/
 token.txt

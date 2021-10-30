@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using DSharpPlus;
+using DSharpPlus.CommandsNext;
+using DSharpPlus.Lavalink;
+using DSharpPlus.Net;
+using LuuBot_Sharp.Commands;
 using System.IO;
 using System.Threading.Tasks;
-using DSharpPlus;
-using Newtonsoft.Json;
 
 namespace LuuBot_Sharp
 {
@@ -12,7 +12,7 @@ namespace LuuBot_Sharp
 	{
 		static void Main(string[] args)
 		{
-			MainAsync().GetAwaiter().GetResult();
+			MainAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 		}
 
 		static async Task MainAsync()
@@ -24,7 +24,27 @@ namespace LuuBot_Sharp
 				TokenType = TokenType.Bot,
 				Intents = DiscordIntents.AllUnprivileged
 			});
+			var commands = discord.UseCommandsNext(new CommandsNextConfiguration()
+			{
+				StringPrefixes = new[] { "-" }
+			});
+			commands.RegisterCommands<MusicCommands>();
+
+			var endpoint = new ConnectionEndpoint
+			{
+				Hostname = "127.0.0.1",
+				Port = 2333
+			};
+			var lavalinkConfig = new LavalinkConfiguration
+			{
+				Password = "youshallnotpass",
+				RestEndpoint = endpoint,
+				SocketEndpoint = endpoint
+			};
+			var lavalink = discord.UseLavalink();
+
 			await discord.ConnectAsync();
+			await lavalink.ConnectAsync(lavalinkConfig);
 			await Task.Delay(-1);
 		}
 	}
