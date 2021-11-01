@@ -88,7 +88,10 @@ namespace LuuBot_Sharp.Commands
 
 		private async Task Conn_PlaybackFinished(LavalinkGuildConnection sender, DSharpPlus.Lavalink.EventArgs.TrackFinishEventArgs e)
 		{
-			Program.ServerQueue.Dequeue();
+			if (Program.ServerQueue.Any())
+			{
+				Program.ServerQueue.Dequeue();
+			}
 			await _Play(sender);
 		}
 
@@ -104,7 +107,7 @@ namespace LuuBot_Sharp.Commands
 				return;
 			}
 			await conn.StopAsync();
-			await ctx.RespondAsync($"Now playing: **{conn.CurrentState.CurrentTrack.Title}**");
+			await ctx.RespondAsync($"Now playing: **{Program.ServerQueue.ElementAt(1).Title}**");
 		}
 
 		[Command("stop")]
