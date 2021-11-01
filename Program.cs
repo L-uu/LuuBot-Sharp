@@ -3,6 +3,7 @@ using DSharpPlus.CommandsNext;
 using DSharpPlus.Lavalink;
 using DSharpPlus.Net;
 using LuuBot_Sharp.Commands;
+using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -10,6 +11,8 @@ namespace LuuBot_Sharp
 {
 	class Program
 	{
+		static public Queue<LavalinkTrack> ServerQueue = new Queue<LavalinkTrack>();
+
 		static void Main(string[] args)
 		{
 			MainAsync().ConfigureAwait(false).GetAwaiter().GetResult();
