@@ -92,6 +92,21 @@ namespace LuuBot_Sharp.Commands
 			await _Play(sender);
 		}
 
+		[Command("skip"), Aliases("fs")]
+		public async Task SkipCommand(CommandContext ctx)
+		{
+			var lava = ctx.Client.GetLavalink();
+			var node = lava.ConnectedNodes.Values.First();
+			var conn = node.GetGuildConnection(ctx.Member.VoiceState.Guild);
+			if (conn == null || !Program.ServerQueue.Any())
+			{
+				await ctx.RespondAsync("No music is playing.");
+				return;
+			}
+			await conn.StopAsync();
+			await ctx.RespondAsync($"Now playing: **{conn.CurrentState.CurrentTrack.Title}**");
+		}
+
 		[Command("stop")]
 		public async Task StopCommand(CommandContext ctx)
 		{
