@@ -69,6 +69,7 @@ namespace LuuBot_Sharp.Commands
 				Program.ServerQueue.Enqueue(track);
 				return;
 			}
+			conn.PlaybackFinished += Conn_PlaybackFinished;
 			Program.ServerQueue.Enqueue(track);
 			await _Play(conn);
 			await ctx.RespondAsync($"Now playing: **{track.Title}**");
@@ -82,13 +83,13 @@ namespace LuuBot_Sharp.Commands
 				await conn.DisconnectAsync();
 				return;
 			}
-			await conn.PlayAsync(Program.ServerQueue.Dequeue());
-			conn.PlaybackFinished += Conn_PlaybackFinished;
+			await conn.PlayAsync(Program.ServerQueue.Peek());
 		}
 
 		private async Task Conn_PlaybackFinished(LavalinkGuildConnection sender, DSharpPlus.Lavalink.EventArgs.TrackFinishEventArgs e)
 		{
-			await _Play(e.Player);
+			Program.ServerQueue.Dequeue();
+			await _Play(sender);
 		}
 
 		[Command("stop")]
@@ -102,6 +103,7 @@ namespace LuuBot_Sharp.Commands
 				await ctx.RespondAsync("No music is playing.");
 				return;
 			}
+			Program.ServerQueue.Clear();
 			await conn.StopAsync();
 			await conn.DisconnectAsync();
 		}
