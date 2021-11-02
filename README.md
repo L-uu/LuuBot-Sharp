@@ -15,3 +15,6 @@ Create a "token.txt" file in the project directory and paste your discord bot to
 
 ### Authors
 Luu - Luu#6221
+
+## Acknowledgements 
+Lavalink 
